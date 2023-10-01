@@ -42,9 +42,9 @@ class Movies(Base):
     rating = Column(Integer, nullable=False)
     release_year = Column(String(4), nullable=False)
 
-    user = relationship("user", secondary=user_movies, back_populates="movies")
+    user = relationship("User", secondary=user_movies, back_populates="movies")
     watching_lists = relationship(
-        "WatchingList", secondary=watching_list_movies, back_populates="movies")
+        "Watchlist", secondary=watching_list_movies, back_populates="movies")
 
 class Series(Base):
     __tablename__ ='series'
@@ -56,9 +56,9 @@ class Series(Base):
     amount_of_seasons = Column(Integer, nullable=False)
 
 
-    user = relationship("user", secondary=user_series, back_populates="series")
+    user = relationship("User", secondary=user_series, back_populates="series")
     watching_lists = relationship(
-        "WatchingList", secondary=watching_list_series, back_populates="series")
+        "Watchlist", secondary=watching_list_series, back_populates="series")
     
 class User(Base):
     __tablename__ = 'users'
@@ -68,8 +68,8 @@ class User(Base):
     surname = Column(String(30), default="")
 
     watch_lists = relationship(
-        "WatchingList", back_populates = "user", cascade="all, delete-orphan")
-    movies = relationship("Movie", secondary=user_movies, 
+        "Watchlist", back_populates = "user", cascade="all, delete-orphan")
+    movies = relationship("Movies", secondary=user_movies, 
                           back_populates="user")
     series = relationship("Series",secondary=user_series, 
                           back_populates="user")
@@ -82,13 +82,13 @@ class Watchlist(Base):
     name = Column(String(30), nullable=False)
     date_when_created = Column(String(30), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship("User", backref="watchlist")
+    user = relationship("User", back_populates="watch_lists")
 
  
-    movies = relationship("Movie", secondary=watching_list_movies, 
-                          back_populates="watching_list")
+    movies = relationship("Movies", secondary=watching_list_movies, 
+                          back_populates="watching_lists")
     series = relationship("Series",secondary=watching_list_series, 
-                          back_populates="watching_list")
+                          back_populates="watching_lists")
 
 
 
